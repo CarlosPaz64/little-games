@@ -1,49 +1,59 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import DifficultySelectorCard from "./DifficultySelectorCard";
+import React, { useState } from "react";
+import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import DifficultyModal from "./DifficultySelectorModal";
+import { gamesWithDifficulty, difficulties } from "../data/DifficultyData";
 
 /**
- * Props que recibe el componente DifficultySelector.
- * @param gameId - El identificador único del juego actual.
- * @param onSelectDifficulty - Función para manejar el nivel seleccionado.
+ * Props para el componente DifficultySelector.
+ * @param gameId - El identificador del juego actual.
+ * @param onSelectDifficulty - Callback al seleccionar un nivel de dificultad.
  */
 interface DifficultySelectorProps {
-  gameId: string; // Identifica el juego actual.
-  onSelectDifficulty: (difficulty: string) => void; // Callback al seleccionar una dificultad.
+  gameId: string;
+  onSelectDifficulty: (difficulty: string) => void;
 }
 
-// Juegos que requieren selector de dificultad.
-const gamesWithDifficulty = ["crossword", "wordsearch"]; // Identificadores de juegos aplicables.
-
-// Lista de dificultades disponibles.
-const difficulties = ["Fácil", "Intermedio", "Difícil"];
-
 /**
- * Componente que renderiza un selector de dificultad solo para ciertos juegos.
+ * Componente que controla el modal del selector de dificultad.
  */
 const DifficultySelector: React.FC<DifficultySelectorProps> = ({
   gameId,
   onSelectDifficulty,
 }) => {
-  // Verifica si el juego actual permite selector de dificultad.
-  const shouldShow = gamesWithDifficulty.includes(gameId);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-  if (!shouldShow) return null; // Si no aplica, no renderiza nada.
+  console.log("gameId recibido:", gameId);
+  console.log(
+    "¿Debe mostrar selector?",
+    gamesWithDifficulty.includes(gameId)
+  );
+
+  // Si el juego no requiere selector de dificultad, no renderizamos nada.
+  if (!gamesWithDifficulty.includes(gameId)) return null;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Selecciona un nivel de dificultad</Text>
-      <FlatList
-        data={difficulties} // Muestra la lista de dificultades.
-        keyExtractor={(item) => item}
-        horizontal
-        renderItem={({ item }) => (
-          <DifficultySelectorCard
-            difficulty={item} // Pasamos el nivel al card.
-            onSelect={() => onSelectDifficulty(item)} // Maneja el evento al seleccionar.
-          />
-        )}
-        contentContainerStyle={styles.list}
+      <TouchableOpacity
+        style={styles.openButton}
+        onPress={() => {
+          console.log("Abriendo modal...");
+          setModalVisible(true); // Cambia el estado del modal
+        }}
+      >
+        <Text style={styles.openButtonText}>Seleccionar Dificultad</Text>
+      </TouchableOpacity>
+      <DifficultyModal
+        visible={isModalVisible}
+        onClose={() => {
+          console.log("Cerrando modal...");
+          setModalVisible(false); // Cambia el estado al cerrar
+        }}
+        difficulties={difficulties}
+        onSelect={(difficulty) => {
+          console.log("Dificultad seleccionada:", difficulty);
+          onSelectDifficulty(difficulty);
+          setModalVisible(false);
+        }}
       />
     </View>
   );
@@ -51,17 +61,17 @@ const DifficultySelector: React.FC<DifficultySelectorProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 20,
+    marginVertical: 10,
+    alignItems: "center",
   },
-  title: {
+  openButton: {
+    padding: 10,
+    backgroundColor: "#2196F3",
+    borderRadius: 5,
+  },
+  openButtonText: {
+    color: "#fff",
     fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  list: {
-    flexDirection: "row",
-    justifyContent: "space-around",
   },
 });
 
