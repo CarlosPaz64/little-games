@@ -23,8 +23,8 @@ const GameOptionCard: React.FC<GameOptionCardProps> = ({ title, subtitle, onPres
   return (
     // TouchableOpacity permite que el card sea interactivo (detecta toques del usuario).
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Text style={styles.title}>{title}</Text> {/* Muestra el título principal */}
-      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>} {/* Muestra el subtítulo si existe */}
+      <Text style={styles.title}>{String(title)}</Text> {/* Muestra el título principal */}
+      {subtitle && <Text style={styles.subtitle}>{String(subtitle)}</Text>} {/* Muestra el subtítulo si existe */}
     </TouchableOpacity>
   );
 };
