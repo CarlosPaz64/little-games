@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, InteractionManager } from 'react-native';
 import TicTacToeAI from '../handlers/PlayerIA';
 import RenderBoard from './RenderBoard';
 
@@ -31,7 +31,9 @@ const TicTacToe = () => {
 
     // Si no hay ganador y es el turno de la máquina
     if (currentPlayer === 2 && !gameOver) {
-      handleAIMove();
+      InteractionManager.runAfterInteractions(() => {
+        handleAIMove();
+      });
     }
   }, [boardData]); // Se ejecuta cada vez que se actualiza boardData
 
@@ -47,12 +49,14 @@ const TicTacToe = () => {
   };
 
   const handleAIMove = () => {
-    // Hacer el movimiento de la máquina
-    const aiMove = ticTacToeGame.makeAIMove(2); // El jugador 2 es la IA
-    if (aiMove) {
-      setBoardData([...ticTacToeGame.getBoardData()]); // Actualizar el estado del tablero
-      setCurrentPlayer(1); // Cambiar al jugador 1 (Humano)
-    }
+    setTimeout(() => {
+      // Hacer el movimiento de la máquina
+      const aiMove = ticTacToeGame.makeAIMove(2); // El jugador 2 es la IA
+      if (aiMove) {
+        setBoardData([...ticTacToeGame.getBoardData()]); // Actualizar el estado del tablero
+        setCurrentPlayer(1); // Cambiar al jugador 1 (Humano)
+      }
+    }, 1500);
   };
 
   const handleRemakeGame = () => {
@@ -66,6 +70,10 @@ const TicTacToe = () => {
 
   return (
     <View style={styles.container}>
+      {gameOver === false
+          ? <Text style={styles.textIndicator}>Es turno del jugador {currentPlayer}</Text>
+          : <Text style={styles.textIndicator}>Juego terminado {winner !== null ? `ganó el jugador ${winner}` : 'Empate'}</Text>
+      }
       <View style={styles.board}>
         <RenderBoard
           currentPlayer={currentPlayer}
@@ -75,7 +83,7 @@ const TicTacToe = () => {
       </View>
 
       {gameOver && winner === null && (
-          <Text style={styles.remakeText} onPress={handleRemakeGame}>
+        <Text style={styles.remakeText} onPress={handleRemakeGame}>
           Jugar de nuevo
         </Text>
       )}
@@ -83,7 +91,7 @@ const TicTacToe = () => {
       {gameOver && winner !== null && (
         <View style={styles.result}>
           <Text style={styles.winnerText}>
-            ¡Jugador {winner} gana con {winnerType}!
+            ¡Gana por la jugada {winnerType}!
           </Text>
           <Text style={styles.remakeText} onPress={handleRemakeGame}>
             Jugar de nuevo
@@ -121,10 +129,18 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   remakeText: {
+    padding: 10,
+    backgroundColor: '#1aedea',
     fontSize: 16,
-    color: 'blue',
-    textDecorationLine: 'underline',
+    color: 'black',
+    fontWeight: '200',
+    textDecorationLine: 'none',
+    borderRadius: 12,
     marginTop: 10,
+  },
+  textIndicator: {
+    fontSize: 18,
+    color: 'black'
   },
 });
 

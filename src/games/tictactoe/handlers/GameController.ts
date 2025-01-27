@@ -14,7 +14,6 @@ class TicTacToeGame {
     // Variables
     boardData: number[][];
     constructor() {
-        console.log('Starting the game @Tic Tac Toe');
         this.boardData = this.initializateGame();
     }
 

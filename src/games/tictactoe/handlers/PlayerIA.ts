@@ -11,7 +11,7 @@ class TicTacToeAI extends TicTacToeGame {
      * @param player Number representing the AI player (e.g., 2 for AI)
      * @returns {boolean} `true` if the move was successful, `false` otherwise.
      */
-    makeAIMove(player: number): boolean {
+    makeAIMove(player: number = 2): boolean {
         const move = this.getBestMove(player);
         if (move) {
             return this.makeMove(move.row, move.col, player);
