@@ -6,16 +6,18 @@ import GameOption from "../components/GameOption"; // Componente para cada opci�
 import DifficultySelector from "../components/DifficultySelector"; // Selector de dificultad
 import GameList from "../data/GameList"; // Importamos la lista de juegos
 import { handleGameSelect, handleDifficultySelect } from "../handlers/MainMenuHandlers"; // Importamos los manejadores
+import { useNavigation } from "@react-navigation/native";
 
 /**
  * Pantalla principal que muestra los juegos disponibles y el selector de dificultad.
  */
 const MainMenuScreen: React.FC = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null); // Estado del juego seleccionado
+  const navigation = useNavigation<any>(); // Hook de navegacion
 
   return (
     <View style={styles.container}>
-      <ScreenTitle title="Menú Principal" /> {/* Título de la pantalla */}
+      {/* <ScreenTitle title="Menú Principal" /> */} {/*Título de la pantalla */}
       <FlatList
         data={GameList} // Usamos la lista importada de juegos
         keyExtractor={(item) => item.id} // Clave única para cada juego
@@ -23,7 +25,7 @@ const MainMenuScreen: React.FC = () => {
           <GameOption
             name={item.name} // Nombre del juego
             description={item.description} // Descripción del juego
-            onSelect={() => handleGameSelect(item.id, setSelectedGame)} // Callback al seleccionar un juego
+            onSelect={() => handleGameSelect(item.id, setSelectedGame, navigation)} // Callback al seleccionar un juego
           />
         )}
         contentContainerStyle={styles.list} // Estilo del contenedor
