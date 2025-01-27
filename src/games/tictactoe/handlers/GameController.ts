@@ -39,7 +39,7 @@ class TicTacToeGame {
      * and returns false if the move is invalid.
      * @returns {boolean} `true` is move valid, `false` is invalid
     */
-    private isMoveValid(row: number, col: number): boolean {
+    isMoveValid(row: number, col: number): boolean {
         return this.boardData[row][col] === 0;
     }
 
@@ -111,6 +111,17 @@ class TicTacToeGame {
     getBoardData(): number[][] {
         return this.boardData;
     }
+
+    /**
+     * Function to check if the board is full.
+     * 
+     * This method checks if all cells in the board are occupied (no empty spaces left).
+     * @returns {boolean} `true` if the board is full, `false` otherwise.
+    */
+    isBoardFull(): boolean {
+        return this.boardData.every(row => row.every(cell => cell !== 0));
+    }
+
 }
 
 export default TicTacToeGame;

@@ -27,8 +27,13 @@ const styles = StyleSheet.create({
         marginVertical: 10, // Separación entre cards
         backgroundColor: '#ffffff', // Fondo blanco para contraste
         borderRadius: 10, // Bordes redondeados para estética
-        elevation: 3, // Sombra en Android para darle profundidad
+        elevation: 3, // Sombra en Android
+        shadowColor: '#000', // Color de la sombra (iOS)
+        shadowOffset: { width: 5, height: 10 }, // Desplazamiento de la sombra (iOS)
+        shadowOpacity: 0.3, // Opacidad de la sombra (iOS)
+        shadowRadius: 4, // Difuminado de la sombra (iOS)
     },
 });
+
 
 export default BoxInput;
