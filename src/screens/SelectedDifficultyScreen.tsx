@@ -6,27 +6,39 @@ import { AppStackParamList } from "../navigation/AppNavigation";
 /**
  * Props que recibe la pantalla, tipadas desde el stack.
  */
-type Props = NativeStackScreenProps<
-   AppStackParamList,
-  "SelectedDifficulty"
->;
+type Props = NativeStackScreenProps<AppStackParamList, "SelectedDifficulty">;
 
 /**
  * Pantalla que muestra la dificultad seleccionada por el usuario.
  */
 const SelectedDifficultyScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { difficulty } = route.params; // Obtenemos la dificultad de los parámetros
+  const { difficulty, gameId } = route.params; // Obtenemos la dificultad y el ID del juego
+
+  /**
+   * Maneja la navegación hacia el juego del crucigrama.
+   */
+  const handleNavigateToGame = () => {
+    // Validamos que la dificultad sea válida
+    const validDifficulties = ["Fácil", "Intermedio", "Difícil"];
+    if (!validDifficulties.includes(difficulty)) {
+      console.error("Dificultad no válida:", difficulty);
+      return;
+    }
+
+    // Navegamos a la pantalla del crucigrama
+    navigation.navigate("CrosswordGame", { difficulty, gameId });
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.message}>
         Dificultad seleccionada: {difficulty}
-      </Text> {/* Mensaje con la dificultad */}
+      </Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("CrosswordDifficulty")} // Navegar a la pantalla de selección de dificultad
+        onPress={handleNavigateToGame} // Usamos la función manejadora
       >
-        <Text style={styles.buttonText}>Seleccionar otra dificultad</Text>
+        <Text style={styles.buttonText}>Jugar Crucigrama</Text>
       </TouchableOpacity>
     </View>
   );
