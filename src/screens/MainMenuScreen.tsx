@@ -1,52 +1,66 @@
-// Pantalla principal que muestra los minijuegos y el nivel de dificultad
-import React, { useState } from "react"; // Importamos React y useState
-import { StyleSheet, View, FlatList } from "react-native"; // Herramientas de diseño
-import ScreenTitle from "../components/ScreenTitle"; // Componente para mostrar el título
-import GameOption from "../components/GameOption"; // Componente para cada opción de juego
-import DifficultySelector from "../components/DifficultySelector"; // Selector de dificultad
-import GameList from "../data/GameList"; // Importamos la lista de juegos
-import { handleGameSelect, handleDifficultySelect } from "../handlers/MainMenuHandlers"; // Importamos los manejadores
+import React from "react";
+import { StyleSheet, View, FlatList } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import ScreenTitle from "../components/ScreenTitle";
+import GameOption from "../components/GameOption";
+import { AppStackParamList } from "../navigation/AppNavigation";
+import GameList from "../data/GameList";
+import { gamesWithDifficulty } from "../data/DifficultyData";
 
 /**
- * Pantalla principal que muestra los juegos disponibles y el selector de dificultad.
+ * Props que recibe la pantalla, tipadas desde el stack.
  */
-const MainMenuScreen: React.FC = () => {
-  const [selectedGame, setSelectedGame] = useState<string | null>(null); // Estado del juego seleccionado
+type Props = NativeStackScreenProps<AppStackParamList, "MainMenu">;
+
+/**
+ * Pantalla principal que muestra los juegos disponibles.
+ */
+const MainMenuScreen: React.FC<Props> = ({ navigation }) => {
+  /**
+   * Maneja la selección de un juego.
+   * @param gameId - ID del juego seleccionado.
+   */
+  const handleGameSelect = (gameId: string) => {
+    console.log(`Juego seleccionado: ${gameId}`);
+    if (gamesWithDifficulty.includes(gameId)) {
+      // Navega a la pantalla de selección de dificultad
+      navigation.navigate("CrosswordDifficulty");
+    } else {
+      // Navega directamente al juego seleccionado
+      navigation.navigate("SelectedDifficulty", {
+        gameId,
+        difficulty: "N/A", // No aplica dificultad para este juego
+      });
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <ScreenTitle title="Menú Principal" /> {/* Título de la pantalla */}
+      <ScreenTitle title="Menú Principal" />
       <FlatList
-        data={GameList} // Usamos la lista importada de juegos
-        keyExtractor={(item) => item.id} // Clave única para cada juego
+        data={GameList}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <GameOption
-            name={item.name} // Nombre del juego
-            description={item.description} // Descripción del juego
-            onSelect={() => handleGameSelect(item.id, setSelectedGame)} // Callback al seleccionar un juego
+            name={item.name}
+            description={item.description}
+            onSelect={() => handleGameSelect(item.id)}
           />
         )}
-        contentContainerStyle={styles.list} // Estilo del contenedor
+        contentContainerStyle={styles.list}
       />
-      {/* Selector de dificultad, aparece solo si se selecciona un juego */}
-      {selectedGame && (
-        <DifficultySelector
-          gameId={selectedGame} // Pasamos el juego seleccionado
-          onSelectDifficulty={handleDifficultySelect} // Maneja la selección del nivel
-        />
-      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Ocupa todo el espacio disponible
-    padding: 20, // Espaciado interno
-    backgroundColor: "#f9f9f9", // Fondo claro
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#f9f9f9",
   },
   list: {
-    paddingBottom: 20, // Espaciado inferior
+    paddingBottom: 20,
   },
 });
 

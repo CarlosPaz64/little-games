@@ -1,11 +1,21 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainMenuScreen from "../screens/MainMenuScreen"; // Pantalla principal del menú
+import MainMenuScreen from "../screens/MainMenuScreen";
+import CrosswordDifficultyScreen from "../screens/CrosswordDifficultyScreen";
+import SelectedDifficultyScreen from "../screens/SelectedDifficultyScreen";
 
-const Stack = createNativeStackNavigator(); // Creamos el stack de navegación
+// Definimos los tipos de las rutas del stack
+export type AppStackParamList = {
+  MainMenu: undefined;
+  CrosswordDifficulty: undefined;
+  SelectedDifficulty: { gameId: string; difficulty: string };
+};
+
+// Creamos el stack tipado
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
 /**
- * Configuración del stack de navegación para la aplicación.
+ * Configuración de las rutas del módulo de crucigramas.
  */
 const AppNavigator: React.FC = () => {
   return (
@@ -14,10 +24,22 @@ const AppNavigator: React.FC = () => {
       <Stack.Screen
         name="MainMenu"
         component={MainMenuScreen}
-        options={{ title: "Menú Principal" }} // Personalización del encabezado
+        options={{ title: "Menú Principal" }}
+      />
+      {/* Pantalla de selección de dificultad */}
+      <Stack.Screen
+        name="CrosswordDifficulty"
+        component={CrosswordDifficultyScreen}
+        options={{ title: "Seleccionar Dificultad" }}
+      />
+      {/* Pantalla de confirmación de dificultad */}
+      <Stack.Screen
+        name="SelectedDifficulty"
+        component={SelectedDifficultyScreen}
+        options={{ title: "Dificultad Seleccionada" }}
       />
     </Stack.Navigator>
   );
 };
 
-export default AppNavigator; // Exportamos para usar en App.tsx
+export default AppNavigator;
